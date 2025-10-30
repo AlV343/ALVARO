@@ -1,0 +1,48 @@
+import cv2
+import matplotlib.pyplot as plt
+import numpy as np
+
+img = cv2. imread ("act1.jpg")
+img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+#Filtros
+img_average = cv2.blur(img_gray, (5,5)) #Suavizado de imagen
+img_gaussian = cv2.GaussianBlur(img_gray, (5,5), 0)
+
+img_sobelx = cv2.Sobel(src=img_gray, ddepth=cv2.CV_64F, dx=1, dy=0, ksize=5) #x
+img_sobely = cv2.Sobel(src=img_gray, ddepth=cv2.CV_64F, dx=0, dy=1, ksize=5) #y
+
+leg_canny = cv2.Canny(img_gray, 100, 200)
+
+plt.figure(figsize=(15,20))
+plt.subplot(1,3,1)
+plt.imshow(img_gray, cmap="gray")
+plt.title("Original Image")
+plt.axis("off")
+
+plt.subplot(1,3,2)
+img_average = cv2.blur(img_gray, (3,3))
+plt.imshow(img_average, cmap="gray")
+plt.title("Average")
+plt.axis("off")
+
+plt.subplot(1,3,3)
+plt.imshow(img_gaussian, cmap="gray")
+plt.title("Gaussian")
+plt.axis("off")
+
+plt.subplot(2,3,4)
+plt.imshow(img_sobelx, cmap="gray")
+plt.title("Sobel X")
+plt.axis("off")
+
+plt.subplot(2,3,5)
+plt.imshow(img_sobely, cmap="gray")
+plt.title("Sobel Y")
+plt.axis("off")
+
+plt.subplot(2,3,6)
+plt.imshow(leg_canny, cmap="gray")
+plt.title("Canny")
+plt.axis("off")
