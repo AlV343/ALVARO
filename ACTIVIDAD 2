@@ -1,0 +1,45 @@
+pip install pytesseract
+
+import cv2
+import matplotlib.pyplot as plt
+import numpy as np
+import pytesseract as ocr
+
+placas = cv2. imread ("act2.jpg")
+placas = cv2.cvtColor(placas,cv2.COLOR_BGR2RGB)
+
+plt.imshow(placas)
+plt.title("placa original")
+plt.axis("off")
+
+plt.figure()
+placa_negative = cv2.bitwise_not(placas)
+plt.imshow(placa_negative)
+plt.title("placa negativa")
+plt.axis("off")
+
+blanca_upper = np.array([255, 255, 255])
+blanca_lower = np.array([230, 230, 230])
+
+mask = cv2.inRange(placa_negative, blanca_lower, blanca_upper)
+placa_filtro_color = cv2.bitwise_and(placa_negative, placa_negative, mask=mask)
+
+plt.figure()
+plt.imshow(placa_filtro_color)
+plt.title("placa filtro blanco")
+plt.axis("off")
+
+placa_blur = cv2.GaussianBlur(placa_filtro_color,(3,3),0)
+plt.figure()
+plt.imshow(placa_blur)
+plt.title("placa filtro blanco blur")
+plt.axis("off")
+
+placa_dilatada = cv2.dilate(placa_blur, None, iterations=2)
+plt.figure()
+plt.imshow(placa_dilatada)
+plt.title("placa filtro blanco dilatada")
+plt.axis("off")
+
+strings = ocr.image_to_string(placa_dilatada)
+print(strings)
